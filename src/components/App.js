@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import ConnectedTodos from './Todos';
-import ConnectedGoals from './Goals';
 import { connect } from 'react-redux';
-import { handleInitialData } from '../actions/sharedActions.js';
+import { handleInitialData } from '../actions';
 
 class App extends Component {
 
@@ -12,7 +11,7 @@ class App extends Component {
   };
 
   render() {
-    
+
     const { loading } = this.props;
 
     if (loading === true) {
@@ -22,7 +21,6 @@ class App extends Component {
     return (
       <div>
         <ConnectedTodos />
-        <ConnectedGoals />
       </div>
     );
   };

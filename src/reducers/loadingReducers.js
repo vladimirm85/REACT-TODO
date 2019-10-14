@@ -1,4 +1,4 @@
-import { RECEIVE_DATA } from './../actions/sharedActions.js';
+import { RECEIVE_DATA } from './../actions';
 
 export default function loading (state = true, action) {
     switch(action.type) {

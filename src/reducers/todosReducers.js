@@ -1,10 +1,9 @@
 import {
     ADD_TODO,
     REMOVE_TODO,
-    TOGGLE_TODO
-} from './../actions/todosActions.js';
-import { RECEIVE_DATA } from './../actions/sharedActions.js';
-
+    TOGGLE_TODO,
+    RECEIVE_DATA
+} from './../actions';
 
 export default function todosReducer (state = [], action) {
     switch(action.type) {
