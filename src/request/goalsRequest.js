@@ -2,6 +2,8 @@ const BASE_URL = 'https://srapi-todo-api.herokuapp.com/goals';
 
 function getGoals () {
     return new Promise ((resolve, reject) => {
+        console.log('getGoals');
+        
         fetch(BASE_URL).then( response => {
             if(response.status !== 200){
                 // TODO

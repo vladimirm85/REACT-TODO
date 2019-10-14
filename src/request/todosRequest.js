@@ -39,12 +39,12 @@ function addTodo (name) {
     });
 };
 
-function updateTodo (id, complete) {
+function toggleTodo (id, complete) {
     const updates = {
         complete: !complete
     }
     return new Promise ((resolve, reject) => {
-        const updateTodo = fetch(BASE_URL + '/' + id, {
+        const toggleTodo = fetch(BASE_URL + '/' + id, {
             method: 'put',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ function updateTodo (id, complete) {
             body: JSON.stringify(updates)
         })
 
-        updateTodo.then( response => {
+        toggleTodo.then( response => {
             if(response.status !== 200){
                 // TODO
             };
@@ -76,4 +76,4 @@ function deleteTodo (id) {
     });
 }
 
-export { getTodos, addTodo, deleteTodo, updateTodo }
+export { getTodos, addTodo, deleteTodo, toggleTodo }
