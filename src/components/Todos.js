@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { InputGroup, FormControl, Button, Tabs, Tab} from 'react-bootstrap';
-import AllTodos from './todoTabs/allTodos.js';
-import CompletedTodos from './todoTabs/completedTodos.js';
-import IncompletedTodos from './todoTabs/incompletedTodos.js';
+import { Button, Tabs, Tab, Form} from 'react-bootstrap';
+import AllTodosTab from './todoTabs/allTodos.js';
+import TodosTab from './todoTabs/todos.js';
 import {
   handleAddTodo,
   handleDeleteTodo,
-  handleToggle
+  handleToggleTodo
 } from '../actions';
 
-class Todos extends Component {
-  
-  addTodo = (e) => {
-    if (this.inputs.value) {
-      e.preventDefault();
-      this.props.dispatch(handleAddTodo(
-        this.inputs.value,
-        () => this.inputs.value = ''
-      ));
+class Todos extends React.Component {
+
+  state = {
+    activTabKey: 'todos'
+  }
+
+  addTodo = event => {
+    const inputForm = event.currentTarget.inputform;
+    if (inputForm.value) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.dispatch(handleAddTodo(inputForm.value));
+      inputForm.value = '';
     };
   };
 
@@ -27,50 +30,49 @@ class Todos extends Component {
   };
 
   toggleTodo = (id, complete) => {
-    this.props.dispatch(handleToggle(id, complete));
+    this.props.dispatch(handleToggleTodo(id, complete));
   };
 
   render() {
-
     return (
-      <div className="container">
+      this.props.loading
+      ?<h3>Loading</h3>
+      :<div className="container">
         <h1 className="col-6 text-center">Todo List</h1>
         <div className="col-6">
-          <InputGroup className="mb-3">
-            <FormControl
-              placeholder="Add Todo"
-              aria-label="Add Todo"
-              ref={(input) => this.inputs = input}
-            />
-            <InputGroup.Append>
-              <Button
-                variant="outline-secondary"
-                onClick={this.addTodo}
-              >
-                Add Todo
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
-        </div>
-
-        <div className="col-6">
-          <Tabs id="controlled-tab-example" onSelect={() => {}}>
-            <Tab eventKey="todo" title="Todo">
-              <IncompletedTodos
+          <Form onSubmit={this.addTodo}>
+            <Form.Row>
+              <Form.Group controlId="inputform">
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Add Todo"
+                />
+              </Form.Group>
+              <Form.Group controlId="addTodoButton">
+              <Button variant="secondary" type="submit">Add Todo</Button>
+              </Form.Group>
+            </Form.Row>
+          </Form>
+          <Tabs id="todostab" activeKey={this.state.activTabKey} onSelect={key => this.setState({activTabKey: key})}>
+            <Tab eventKey="todos" title="Todo">
+              <TodosTab
                   todos={this.props.todos}
                   toggleTodo={this.toggleTodo}
                   removeTodo={this.removeTodo}
+                  complete={false}
                 /> 
             </Tab>
-            <Tab eventKey="comleted" title="Comleted">
-              <CompletedTodos
+            <Tab eventKey="comletedTodos" title="Comleted">
+              <TodosTab
                 todos={this.props.todos}
                 toggleTodo={this.toggleTodo}
                 removeTodo={this.removeTodo}
-              />            
+                complete={true}
+                />
             </Tab>
             <Tab eventKey="allTodos" title="All todos">
-              <AllTodos
+              <AllTodosTab
                 todos={this.props.todos}
                 toggleTodo={this.toggleTodo}
                 removeTodo={this.removeTodo}
@@ -84,5 +86,6 @@ class Todos extends Component {
 }
 
 export default connect((state) => ({
-  todos: state.todosReducers
+  todos: state.todosReducers.todos,
+  loading: state.todosReducers.loading
 }))(Todos);

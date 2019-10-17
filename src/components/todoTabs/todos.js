@@ -1,14 +1,15 @@
 import React from 'react';
-import { Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap';
 
-export default function IncompletedTodos (props) {
+export default function CompletedTodos (props) {
 
     const todosRows = props.todos.map((todo) => {
-        if (!todo.complete){
+        if (todo.complete === props.complete){
             return (
                 <Row key={'Row' + todo.id} id={'Row' + todo.id}>
                     <Col sm={1}>
                     <input
+                        key={'Input' + todo.id}
                         type="checkbox"
                         onClick={() => {props.toggleTodo(todo.id, todo.complete)}}
                         checked={todo.complete}
@@ -22,7 +23,6 @@ export default function IncompletedTodos (props) {
                 </Row>
             );
         };
-        return;
     });
     
     return (

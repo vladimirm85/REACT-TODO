@@ -3,83 +3,97 @@ export const ADD_TODO = 'ADD_TODO';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const TOGGLE_TODO = 'TOGGLE_TODO';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
+export const TOGGLE_LOADING = 'TOGGLE_LOADING';
 
 
-function receiveDataAction (todos) {
+const receiveDataAction = todos => {
   return {
     type: RECEIVE_DATA,
     todos    
   };
 };
 
-function addTodoAction (todo) {
+const addTodoAction = todo => {
     return {
       type: ADD_TODO,
       todo
     };
 };
 
-function removeTodoAction (id) {
+const removeTodoAction = id => {
     return {
       type: REMOVE_TODO,
       id
     };
 };
   
-function toggleTodoAction (id) {
+const toggleTodoAction = id => {
     return {
       type: TOGGLE_TODO,
       id
     };
 };
 
+const toggleLoading = () => {
+  return {
+    type: TOGGLE_LOADING
+  };
+};
+
 export function handleInitialData () {
-  return (dispatch) => {
-    return API.get().then( todos => {
+  return dispatch => {
+    return API.get().then(todos => {
         dispatch(receiveDataAction(todos.data));
-      }).catch ( error => {
+      }).catch (error => {
         console.log('Error ' + error);
         dispatch(receiveDataAction([]));
     });
   };
 };
 
+export function handleAddTodo (name) {
+  return dispatch => {
+    dispatch(toggleLoading());
+    return API.post(`/`, {
+      name,
+      complete: false
+      }).then(todo => {
+        dispatch(addTodoAction(todo.data));
+      }).catch(error => {
+        console.log('Error ' + error);
+        alert('There was an error. Try again.')
+      }).finally(()=> {
+        dispatch(toggleLoading());
+    });
+  };
+};
+
 export function handleDeleteTodo (todo) {
-    return (dispatch) => {
+  return dispatch => {
+    dispatch(toggleLoading());
+    return API.delete(`/${todo.id}`).then(response => {
       dispatch(removeTodoAction(todo.id));
-      return API.delete(`/${todo.id}`)
-        .catch( error => {
-          console.log('Error ' + error);
-          dispatch(addTodoAction(todo));
-          alert('An error occurred. Try again.');
-        });
-    };
+      }).catch(error => {
+        console.log('Error ' + error);
+        dispatch(addTodoAction(todo));
+        alert('An error occurred. Try again.');
+      }).finally(()=>{
+        dispatch(toggleLoading());
+    });
+  };
 };
 
-export function handleAddTodo (name, cb) {
-    return (dispatch) => {
-      return API.post(`/`, {
-        name,
-        complete: false
-      }).then( todo => {
-          dispatch(addTodoAction(todo.data));
-          cb();
-        })
-        .catch( error => {
-          console.log('Error ' + error);
-          alert('There was an error. Try again.')
-        });
-    };
-};
-
-export function handleToggle (id, complete) {
-    return (dispatch) => {
+export function handleToggleTodo (id, complete) {
+  return dispatch => {
+    dispatch(toggleLoading());
+    return API.put(`/${id}`, {complete: !complete}).then(response => {
       dispatch(toggleTodoAction(id));
-      return API.put(`/${id}`, {complete: !complete})
-        .catch( error => {
+      }).catch(error => {
           console.log('Error ' + error);
           dispatch(toggleTodoAction(id));
           alert('An error occurred. Try again.');
-        });
-    };
+      }).finally(()=>{
+        dispatch(toggleLoading());
+    });
+  };
 };
