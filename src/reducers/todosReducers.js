@@ -16,43 +16,41 @@ export default function todosReducer (state = initialState, action) {
     switch(action.type) {
 
       case ADD_TODO :
-        state = {
+        return {
           ...state,
           todos: [...state.todos, action.todo]
         };
-        return state;
 
       case REMOVE_TODO :
-        state = {
+        return {
           ...state,
           todos: state.todos.filter((todo) => todo.id !== action.id)
         };
-        return state;
 
       case TOGGLE_TODO :
-        const newState = {...state};
-        const newTodos = [...newState.todos]
-        const index = newTodos.findIndex(todo => todo.id === action.id);
-        newTodos[index] = {
-          ...newTodos[index],
-          complete: !newTodos[index].complete
+        const updatedTodos = [...state.todos]
+        const index = updatedTodos.findIndex(todo => todo.id === action.id);
+        const updatedTodo = {
+          ...updatedTodos[index],
+          complete: !updatedTodos[index].complete
         }
-        newState.todos = newTodos;
-        return newState;
+        updatedTodos[index] = updatedTodo;
+        return {
+          ...state,
+          todos: updatedTodos
+        };
 
       case RECEIVE_DATA :
-        state = {
+        return {
           ...state,
           todos: action.todos
         };
-        return state;
 
       case TOGGLE_LOADING:
-          state = {
-            ...state,
-            loading: !state.loading
-          };
-          return state;
+        return {
+          ...state,
+          loading: !state.loading
+        };
 
       default :
         return state;
