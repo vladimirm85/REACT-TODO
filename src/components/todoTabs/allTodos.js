@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Col, Row } from 'react-bootstrap';
 
-export default function AllTodos (props) {
+const AllTodos = (props) => {
 
     const todosRows = props.todos.map((todo) => {
         return (
@@ -29,3 +30,12 @@ export default function AllTodos (props) {
         </div>
   );
 };
+
+AllTodos.propTypes = {
+    todos: PropTypes.array.isRequired,
+    toggleTodo: PropTypes.func.isRequired,
+    removeTodo: PropTypes.func.isRequired
+};
+
+
+export default AllTodos;

@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Col, Row } from 'react-bootstrap';
 
-export default function CompletedTodos (props) {
+const CompletedTodos = (props) => {
 
     const todosRows = props.todos.map((todo) => {
         if (todo.complete === props.complete){
@@ -31,3 +32,13 @@ export default function CompletedTodos (props) {
         </div>
   );
 };
+
+CompletedTodos.propTypes = {
+    todos: PropTypes.array.isRequired,
+    toggleTodo: PropTypes.func.isRequired,
+    removeTodo: PropTypes.func.isRequired,
+    complete: PropTypes.bool.isRequired
+};
+
+
+export default CompletedTodos;
