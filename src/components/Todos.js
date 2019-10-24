@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Tabs, Tab, Form} from 'react-bootstrap';
-import AllTodosTab from './todoTabs/allTodos.js';
-import TodosTab from './todoTabs/todos.js';
+import TodosTabs from './todoTabs';
 import {
   handleAddTodo,
   handleDeleteTodo,
@@ -14,6 +13,12 @@ class Todos extends React.Component {
   state = {
     activTabKey: 'todos'
   }
+
+  getTabs = () => [
+    {eventKey: "todos", title: "Uncompleted", todos: this.props.todos.filter(todo => !todo.complete)},
+    {eventKey: "comletedTodos", title: "Completed", todos: this.props.todos.filter(todo => !!todo.complete)},
+    {eventKey: "AllTodos", title: "All todos", todos: this.props.todos}
+  ];
 
   addTodo = event => {
     const inputForm = event.currentTarget.inputform;
@@ -55,29 +60,16 @@ class Todos extends React.Component {
             </Form.Row>
           </Form>
           <Tabs id="todostab" activeKey={this.state.activTabKey} onSelect={key => this.setState({activTabKey: key})}>
-            <Tab eventKey="todos" title="Todo">
-              <TodosTab
-                  todos={this.props.todos}
-                  toggleTodo={this.toggleTodo}
-                  removeTodo={this.removeTodo}
-                  complete={false}
-                /> 
-            </Tab>
-            <Tab eventKey="comletedTodos" title="Comleted">
-              <TodosTab
-                todos={this.props.todos}
-                toggleTodo={this.toggleTodo}
-                removeTodo={this.removeTodo}
-                complete={true}
-                />
-            </Tab>
-            <Tab eventKey="allTodos" title="All todos">
-              <AllTodosTab
-                todos={this.props.todos}
-                toggleTodo={this.toggleTodo}
-                removeTodo={this.removeTodo}
-              />
-            </Tab>
+            {
+                this.getTabs().map(tab => 
+                <Tab key={tab.eventKey} eventKey={tab.eventKey} title={tab.title}>
+                <TodosTabs
+                    todos={tab.todos}
+                    toggleTodo={this.toggleTodo}
+                    removeTodo={this.removeTodo}
+                    /> 
+                </Tab>)
+            }
           </Tabs>         
         </div>
       </div>
@@ -86,6 +78,6 @@ class Todos extends React.Component {
 }
 
 export default connect((state) => ({
-  todos: state.todosReducers.todos,
-  loading: state.todosReducers.loading
+  todos: state.todos,
+  loading: state.loading
 }))(Todos);

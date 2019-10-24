@@ -4,7 +4,7 @@ import {
     TOGGLE_TODO,
     RECEIVE_DATA,
     TOGGLE_LOADING
-} from './../actions';
+} from '../actions';
 
 const initialState = {
   todos: [],

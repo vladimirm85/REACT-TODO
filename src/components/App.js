@@ -1,5 +1,5 @@
 import React from 'react';
-import ConnectedTodos from './Todos';
+import Todos from './Todos';
 import { connect } from 'react-redux';
 import { handleInitialData } from '../actions';
 
@@ -11,15 +11,9 @@ class App extends React.Component {
 
   render() {
     return (
-      this.props.loading
-      ?<h3>Loading</h3>
-      :<div>
-        <ConnectedTodos />
-      </div>
+      <Todos />
     );
   }
 };
 
-export default connect((state) => ({
-  loading: state.loadingReducers
-}))(App);
+export default connect()(App);
