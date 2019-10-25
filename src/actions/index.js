@@ -1,107 +1,83 @@
 import axios from 'axios';
-
-export const ADD_TODO = 'ADD_TODO';
-export const REMOVE_TODO = 'REMOVE_TODO';
-export const TOGGLE_TODO = 'TOGGLE_TODO';
-export const RECEIVE_DATA = 'RECEIVE_DATA';
-export const TOGGLE_LOADING = 'TOGGLE_LOADING';
-
 const API = axios.create({
-    baseURL: `https://srapi-todo-api.herokuapp.com/todos`
+    baseURL: `https://heroku-strapi-todo-api.herokuapp.com/todos`
 });
 
+export const RECEIVE_DATA = 'RECEIVE_DATA';
+const getTodo = todos => ({type: RECEIVE_DATA, todos});
 
-const receiveDataAction = todos => {
-    return {
-        type: RECEIVE_DATA,
-        todos
-    };
-};
+export const ADD_TODO = 'ADD_TODO';
+const addTodo = todo => ({type: ADD_TODO, todo});
 
-const addTodoAction = todo => {
-    return {
-        type: ADD_TODO,
-        todo
-    };
-};
+export const REMOVE_TODO = 'REMOVE_TODO';
+const removeTodo = id => ({type: REMOVE_TODO, id});
 
-const removeTodoAction = id => {
-    return {
-        type: REMOVE_TODO,
-        id
-    };
-};
+export const TOGGLE_TODO = 'TOGGLE_TODO';
+const toggleTodo = id => ({type: TOGGLE_TODO, id});
 
-const toggleTodoAction = id => {
-    return {
-        type: TOGGLE_TODO,
-        id
-    };
-};
+export const LOADER_PENDING = 'LOADER_PENDING';
+const loaderPending = () => ({type: LOADER_PENDING});
 
-const toggleLoading = () => {
-    return {
-        type: TOGGLE_LOADING
-    };
-};
+export const LOADER_READY = 'LOADER_READY';
+const loaderReady = () => ({type: LOADER_READY});
 
-export function handleInitialData() {
+const handleInitialData = () => {
     return dispatch => {
-        dispatch(toggleLoading());
+        dispatch(loaderPending());
         return API.get().then(todos => {
-            dispatch(receiveDataAction(todos.data));
+            dispatch(getTodo(todos.data));
         }).catch(error => {
             console.log('Error ' + error);
-            dispatch(receiveDataAction([]));
+            alert('There was an error. Try again.');
         }).finally(() => {
-            dispatch(toggleLoading());
+            dispatch(loaderReady());
         });
     };
 };
 
-export function handleAddTodo(name) {
+const handleAddTodo = name => {
     return dispatch => {
-        dispatch(toggleLoading());
+        dispatch(loaderPending());
         return API.post('/', {
             name,
-            complete: false
+            isCompleted: false
         }).then(todo => {
-            dispatch(addTodoAction(todo.data));
+            dispatch(addTodo(todo.data));
         }).catch(error => {
             console.log('Error ' + error);
-            alert('There was an error. Try again.')
+            alert('There was an error. Try again.');
         }).finally(() => {
-            dispatch(toggleLoading());
+            dispatch(loaderReady());
         });
     };
 };
 
-export function handleDeleteTodo(todo) {
+const handleDeleteTodo = todo => {
     return dispatch => {
-        dispatch(toggleLoading());
+        dispatch(loaderPending());
         return API.delete(`/${todo.id}`).then(response => {
-            dispatch(removeTodoAction(todo.id));
+            dispatch(removeTodo(todo.id));
         }).catch(error => {
             console.log('Error ' + error);
-            dispatch(addTodoAction(todo));
             alert('An error occurred. Try again.');
         }).finally(() => {
-            dispatch(toggleLoading());
+            dispatch(loaderReady());
         });
     };
 };
 
-export function handleToggleTodo(id, complete) {
+const handleToggleTodo = (id, isCompleted) => {
     return dispatch => {
-        dispatch(toggleLoading());
-        return API.put(`/${id}`, { complete: !complete }).then(response => {
-            dispatch(toggleTodoAction(id));
+        dispatch(loaderPending());
+        return API.put(`/${id}`, { isCompleted: !isCompleted }).then(response => {
+            dispatch(toggleTodo(id));
         }).catch(error => {
             console.log('Error ' + error);
-            dispatch(toggleTodoAction(id));
             alert('An error occurred. Try again.');
         }).finally(() => {
-            dispatch(toggleLoading());
+            dispatch(loaderReady());
         });
     };
 };
+
+export { handleInitialData, handleAddTodo, handleDeleteTodo, handleToggleTodo };
