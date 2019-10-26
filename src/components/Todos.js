@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Tabs, Tab, Form } from 'react-bootstrap';
 import TodosTabs from './todoTabs';
 import {
+    LOADER_PENDING,
     handleAddTodo,
     handleDeleteTodo,
     handleToggleTodo
@@ -40,7 +41,7 @@ class Todos extends React.Component {
 
     render() {
         return (
-            this.props.loading
+            this.props.loading === LOADER_PENDING
                 ? <h3>Loading</h3>
                 : <div className="container">
                     <h1 className="col-6 text-center">Todo List</h1>

@@ -9,7 +9,7 @@ import {
 
 const initialState = {
     todos: [],
-    loading: 'init'
+    loading: 'LOADER_INIT'
 }
 
 export default function todosReducer(state = initialState, action) {
@@ -45,13 +45,13 @@ export default function todosReducer(state = initialState, action) {
         case LOADER_PENDING:
             return {
                 ...state,
-                loading: true
+                loading: LOADER_PENDING
             };
 
         case LOADER_READY:
             return {
                 ...state,
-                loading: false
+                loading: LOADER_READY
             };
 
         default:
