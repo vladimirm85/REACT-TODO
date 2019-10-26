@@ -9,7 +9,7 @@ import {
 
 const initialState = {
     todos: [],
-    loading: false
+    loading: 'init'
 }
 
 export default function todosReducer(state = initialState, action) {
@@ -29,12 +29,11 @@ export default function todosReducer(state = initialState, action) {
             };
 
         case TOGGLE_TODO:
-            const updatedTodos = state.todos.map(todo => todo.id !== action.id
-                ? {...todo}
-                : {...todo, isCompleted: !todo.isCompleted});
             return {
                 ...state,
-                todos: updatedTodos
+                todos: state.todos.map(todo => todo.id !== action.id
+                    ? {...todo}
+                    : {...todo, isCompleted: !todo.isCompleted})
             };
 
         case RECEIVE_DATA:
