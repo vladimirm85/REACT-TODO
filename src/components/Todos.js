@@ -8,45 +8,49 @@ import {
     handleDeleteTodo,
     handleToggleTodo
 } from '../actions';
+import './todos.css'
 
 class Todos extends React.Component {
     state = {
-        activTabKey: 'todos'
+        activTabKey: 'uncompleted'
     }
 
     getTabs = () => [
-        { eventKey: "todos", title: "Uncompleted", todos: this.props.todos.filter(todo => !todo.isCompleted) },
-        { eventKey: "comletedTodos", title: "Completed", todos: this.props.todos.filter(todo => todo.isCompleted) },
-        { eventKey: "AllTodos", title: "All todos", todos: this.props.todos }
+        { eventKey: 'uncompleted', title: 'Uncompleted', todos: this.props.todos.filter(todo => !todo.isCompleted) },
+        { eventKey: 'comletedTodos', title: 'Completed', todos: this.props.todos.filter(todo => todo.isCompleted) },
+        { eventKey: 'todos', title: 'All todos', todos: this.props.todos }
     ];
 
     addTodo = event => {
         event.preventDefault();
         event.stopPropagation();
-        let newTodoTitle = event.currentTarget.inputform.value;
+
+        let newTodoTitle = event.currentTarget.newTodoTitle.value;
+
         if (newTodoTitle.trim()) {
-            this.props.dispatch(handleAddTodo(newTodoTitle));
+            this.props.handleAddTodo(newTodoTitle);
             newTodoTitle = '';
         };
     };
 
     removeTodo = todoId => {
-        this.props.dispatch(handleDeleteTodo(todoId));
+        this.props.handleDeleteTodo(todoId);
     };
 
     toggleTodo = updatedTodo => {
-        this.props.dispatch(handleToggleTodo(updatedTodo));
+        this.props.handleToggleTodo(updatedTodo);
     };
 
     render() {
         return (
             this.props.loader === 'pending'
                 ? <h3>Loading</h3>
-                : <div style={{ paddingLeft: '15%', paddingRight: '15%' }} className="container">
+                : <div
+                    className="container base-todos">
                     <h1 className="text-center">Todo List</h1>
                     <Form onSubmit={this.addTodo}>
-                        <Form.Row style={{ justifyContent: 'center' }} >
-                            <Form.Group controlId="inputform">
+                        <Form.Row style={{ justifyContent: 'center' }}>
+                            <Form.Group controlId="newTodoTitle">
                                 <Form.Control
                                     required
                                     type="text"
@@ -54,20 +58,28 @@ class Todos extends React.Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="addTodoButton">
-                                <Button variant="secondary" type="submit">Add Todo</Button>
+                                <Button
+                                    variant="secondary"
+                                    type="submit">
+                                    Add Todo
+                                </Button>
                             </Form.Group>
                         </Form.Row>
                     </Form>
-                    <Tabs id="todostab" activeKey={this.state.activTabKey} onSelect={key => this.setState({ activTabKey: key })}>
+                    <Tabs
+                        id="todosTab"
+                        activeKey={this.state.activTabKey}
+                        onSelect={key => this.setState({ activTabKey: key })}>
                         {this.getTabs().map(tab =>
-                            <Tab key={tab.eventKey} eventKey={tab.eventKey} title={tab.title}>
+                            <Tab
+                                key={tab.eventKey}
+                                eventKey={tab.eventKey}
+                                title={tab.title}>
                                 <TodosTab
                                     todos={tab.todos}
                                     toggleTodo={this.toggleTodo}
-                                    removeTodo={this.removeTodo}
-                                />
-                            </Tab>
-                        )}
+                                    removeTodo={this.removeTodo} />
+                            </Tab>)}
                     </Tabs>
                 </div>
         );
@@ -79,7 +91,15 @@ Todos.propTypes = {
     loader: PropTypes.string.isRequired
 };
 
-export default connect(state => ({
+const mapStateToProps = state => ({
     todos: state.todos,
     loader: state.loader
-}))(Todos);
+});
+
+const mapDispatchToProps = dispatch => ({
+    handleAddTodo: data => dispatch(handleAddTodo(data)),
+    handleDeleteTodo: data => dispatch(handleDeleteTodo(data)),
+    handleToggleTodo: data => dispatch(handleToggleTodo(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Todos);

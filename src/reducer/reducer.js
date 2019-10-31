@@ -11,45 +11,42 @@ const initialState = {
     loader: 'init'
 }
 
-const reducer = (state = initialState, action) => {
-
+export default (state = initialState, action) => {
     switch (action.type) {
 
         case ADD_TODO:
             return {
                 ...state,
-                todos: [...state.todos, action.todo]
+                todos: [...state.todos, action.payload.todo]
             };
 
         case REMOVE_TODO:
             return {
                 ...state,
-                todos: state.todos.filter((todo) => todo.id !== action.id)
+                todos: state.todos.filter(todo => todo.id !== action.payload.id)
             };
 
         case TOGGLE_TODO:
             return {
                 ...state,
-                todos: state.todos.map(todo => todo.id !== action.updatedTodo.id
+                todos: state.todos.map(todo => todo.id !== action.payload.updatedTodo.id
                     ? todo
-                    : {...action.updatedTodo})
+                    : {...action.payload.updatedTodo})
             };
 
         case FETCH_TODOS:
             return {
                 ...state,
-                todos: action.todos
+                todos: action.payload.todos
             };
 
         case SET_LOADER_STATUS:
             return {
                 ...state,
-                loader: action.loaderStatus
+                loader: action.payload.loaderStatus
             };
 
         default:
             return state;
     };
 };
-
-export default reducer;

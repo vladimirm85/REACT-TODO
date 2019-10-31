@@ -12,8 +12,7 @@ const TodosTab = props =>
                         key={'Input' + todo.id}
                         onClick={() => { props.toggleTodo({...todo, isCompleted: !todo.isCompleted})}}
                         checked={todo.isCompleted}
-                        readOnly
-                    />
+                        readOnly />
                 </Col>
                 <Col style={{ wordBreak: 'break-word' }} >{todo.name}</Col>
                 <Col sm={0}>

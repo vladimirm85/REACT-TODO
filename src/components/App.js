@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Todos from './Todos';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { handleInitialData } from '../actions';
 
-class App extends React.Component {
+const App = () => {
+    const dispatch = useDispatch()
+    
+    useEffect (() => 
+        dispatch(handleInitialData())
+    , [dispatch]);
 
-  componentDidMount () {
-    this.props.dispatch(handleInitialData());
-  };
-
-  render() {
     return (
-      <Todos />
+        <Todos />
     );
-  }
 };
 
 export default connect()(App);
