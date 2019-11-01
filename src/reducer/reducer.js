@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
         case ADD_TODO:
             return {
                 ...state,
-                todos: [...state.todos, action.payload.todo]
+                todos: [...state.todos, action.payload.newTodo]
             };
 
         case REMOVE_TODO:
@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 todos: state.todos.map(todo => todo.id !== action.payload.updatedTodo.id
-                    ? todo
+                    ? {...todo}
                     : {...action.payload.updatedTodo})
             };
 

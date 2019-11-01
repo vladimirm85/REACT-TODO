@@ -5,11 +5,11 @@ import { Button, Col, Row } from 'react-bootstrap';
 const TodosTab = props => 
     <>
         {props.todos.map(todo =>
-            <Row key={'AllTodosRow' + todo.id} id={'Row' + todo.id}>
+            <Row key={`todoRow${todo.id}`} id={`row${todo.id}`}>
                 <Col sm={1}>
                     <input
                         type="checkbox"
-                        key={'Input' + todo.id}
+                        key={`checkbox${todo.id}`}
                         onClick={() => { props.toggleTodo({...todo, isCompleted: !todo.isCompleted})}}
                         checked={todo.isCompleted}
                         readOnly />

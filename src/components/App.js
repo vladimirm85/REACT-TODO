@@ -3,16 +3,14 @@ import Todos from './Todos';
 import { connect, useDispatch } from 'react-redux';
 import { handleInitialData } from '../actions';
 
-const App = () => {
-    const dispatch = useDispatch()
+export default connect()(() => {
+    const dispatch = useDispatch();
     
-    useEffect (() => 
+    useEffect (() => {
         dispatch(handleInitialData())
-    , [dispatch]);
+    }, [dispatch]);
 
     return (
         <Todos />
     );
-};
-
-export default connect()(App);
+});

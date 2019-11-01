@@ -12,22 +12,22 @@ import './todos.css'
 
 class Todos extends React.Component {
     state = {
-        activTabKey: 'uncompleted'
+        activTabKey: 'uncompletedTodos'
     }
 
     getTabs = () => [
-        { eventKey: 'uncompleted', title: 'Uncompleted', todos: this.props.todos.filter(todo => !todo.isCompleted) },
+        { eventKey: 'uncompletedTodos', title: 'Uncompleted', todos: this.props.todos.filter(todo => !todo.isCompleted) },
         { eventKey: 'comletedTodos', title: 'Completed', todos: this.props.todos.filter(todo => todo.isCompleted) },
-        { eventKey: 'todos', title: 'All todos', todos: this.props.todos }
+        { eventKey: 'allTodos', title: 'All todos', todos: this.props.todos }
     ];
 
     addTodo = event => {
         event.preventDefault();
         event.stopPropagation();
 
-        let newTodoTitle = event.currentTarget.newTodoTitle.value;
+        let newTodoTitle = event.currentTarget.newTodoTitle.value.trim();
 
-        if (newTodoTitle.trim()) {
+        if (newTodoTitle) {
             this.props.handleAddTodo(newTodoTitle);
             newTodoTitle = '';
         };
@@ -46,7 +46,7 @@ class Todos extends React.Component {
             this.props.loader === 'pending'
                 ? <h3>Loading</h3>
                 : <div
-                    className="container base-todos">
+                    className="container base-todos Aligner">
                     <h1 className="text-center">Todo List</h1>
                     <Form onSubmit={this.addTodo}>
                         <Form.Row style={{ justifyContent: 'center' }}>
@@ -97,9 +97,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    handleAddTodo: data => dispatch(handleAddTodo(data)),
-    handleDeleteTodo: data => dispatch(handleDeleteTodo(data)),
-    handleToggleTodo: data => dispatch(handleToggleTodo(data))
+    handleAddTodo: newTodoTitle => dispatch(handleAddTodo(newTodoTitle)),
+    handleDeleteTodo: id => dispatch(handleDeleteTodo(id)),
+    handleToggleTodo: updatedTodo => dispatch(handleToggleTodo(updatedTodo))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Todos);

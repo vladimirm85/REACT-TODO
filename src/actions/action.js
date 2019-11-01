@@ -12,10 +12,10 @@ const getTodo = todos => ({
 });
 
 export const ADD_TODO = 'ADD_TODO';
-const addTodo = todo => ({
+const addTodo = newTodo => ({
     type: ADD_TODO,
     payload: {
-        todo
+        newTodo
     }
 });
 
@@ -57,11 +57,11 @@ export const handleInitialData = () => {
     };
 };
 
-export const handleAddTodo = name => {
+export const handleAddTodo = todoName => {
     return dispatch => {
         dispatch(setLoaderStatus('pending'));
         return API.post('/', {
-            name,
+            name: todoName,
             isCompleted: false
         }).then(response => {
             dispatch(addTodo(response.data));
