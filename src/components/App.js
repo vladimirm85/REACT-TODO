@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import Todos from './Todos';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { handleInitialData } from '../actions';
 
-export default connect()(() => {
+export default () => {
     const dispatch = useDispatch();
     
     useEffect (() => {
@@ -13,4 +13,4 @@ export default connect()(() => {
     return (
         <Todos />
     );
-});
+};
